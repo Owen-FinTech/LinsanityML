@@ -1,2 +1,2 @@
 # LinsanityML
-Machine Learning project for sports forecasting using player and team statistics. 
+Machine Learning project for sports forecasting using player stats, team stats and additional data sources.
