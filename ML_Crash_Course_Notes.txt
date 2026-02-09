@@ -1,0 +1,333 @@
+- ML systems fall into one or more of the following categories:
+	- SUPERVISED LEARNING:
+		- This is like a student learning new material by studying old exams that contain both questions and answers.
+		- Two of the most common use cases are regression and classification.
+			- REGRESSION: predicts a numeric value.
+			- CLASSIFICATION: predicts the likelihood that something belongs to a category.
+				- Binary or multi-class.
+	- UNSUPERVISED LEARNING:
+		- Makes predictions by being given data that does not contain correct answers.
+			- CLUSTERING: the model finds data points that demarcate natural groupings (not defined by you).
+	- REINFORCEMENT LEARNING:
+		- Makes predictions by getting rewards or penalties based on actions performed within an environment.
+		- Generates a policy that defines the best strategy for getting the most rewards.
+		- Used to train robots.
+	- GENERATIVE AI:
+		- At a high-level, generative models learn patterns in data with the goal to produce new but similar data. 
+- DATA: the driving force of ML. 
+	- Data comes in the form of words and numbers stored in tables, or as the values of pixels and waveforms captured in images and audio files.
+- DATASETS: are made up of individual examples that contain features and a label.
+	- Features are the values that a supervised model uses to predict the label. The label is the "answer", or the value we want the model to predict.
+	- A dataset is characterized by its size and diversity. Good datasets are both large and highly diverse.
+	- A dataset can also be characterized by the number of features. 
+		- More features don't always produce better models because some features might have no causal relationship to the label.
+- MODEL: the complex collection of numbers that define the mathematical relationship from specific input feature patterns to specific output label values. 
+	- Discovered through training. 
+- TRAINING: the model finds the best solution by comparing its predicted value to the label's actual value.
+	- Based on the difference between the predicted and actual values, defined as the loss, the model gradually updates its solution. 
+- EVALUATION: we use a labeled dataset, but we only give the model the dataset's features. 
+	- We then compare the model's predictions to the label's true values.
+- INFERENCE: once satisfied with the results from evaluation, we can use the model to make predictions, called inferences, on unlabeled examples.
+- LINEAR REGRESSION: y' = b + w1x1
+	- y' is the predicted label (the output).
+	- b is the bias (same concept as the y-intercept) calculated during training.
+	- w1 is the weight of the feature (same concept as slope) calculated during training.
+	- x1 is a feature (the input).
+	- A model that relies on 5 features would be written: y' = b + w1x1 + w2x2 + w3x3 + w4x4 + w5x5
+- LOSS: focuses on the distance between predicted and actual values, not the direction. Thus, all methods for calculating loss remove the sign. 
+	- When choosing the best loss function, consider how you want the model to treat outliers.
+		- For instance, Mean Squared Error (MSE) moves the model more toward the outliers, while Mean Absolute Error (MAE) doesn't.
+			- Root Mean Squared Error (RMSE) is often used to get the error back into the same units as the label.
+			- Choose MSE if you want to heavily penalize large errors.
+			- Choose MAE if your dataset has significant outliers that you don't want to overly influence the model.
+				- MAE is more robust. 
+		- L2 loss incurs a much higher penalty for an outlier the L1 loss.
+	- The loss functions for linear models always produce a convex surface.
+- GRADIENT DESCENT: a mathematical technique that iteratively finds the weights and bias that produce the model with the lowest loss.
+	- Begins training with randomized weights and biases near zero, then repeats the following steps:
+		1) Calculate the loss with the current weight and bias.
+		2) Determine the direction to move the weights and bias that reduce the loss.
+		3) Move the weight and bias values a small amount in the direction that reduces loss.
+		4) Return to step one and repeat the process until the model can't reduce the loss any further (until it converges).
+	- The model almost never finds the exact minimum for each weight and bias, but instead finds a value very close to it.  
+- HYPERPARAMETERS: variables that control different aspects of training (in contrast to parameters that are part of the model itself).
+	- Three common hyperparameters are:
+		- LEARNING RATE:
+			- A floating point number you set that influences how quickly the model converges.
+			- Determines the magnitude of the changes to make to the weights and bias during each step of the gradient descent process.
+				- A learning rate that is too small can take too many iterations to converge.
+				- A learning rate that is too large never converges. 
+					- When too large each iteration either causes the loss to bounce around or continually increase.
+		- BATCH SIZE:
+			- The number of examples the model processes before updating its weights and bias.
+				- Stochastic Gradient Descent (SGD) uses only a single example (batch size of one chosen at random).
+					- Given enough iterations, SGD works but is very noisy in the loss curve.
+				- Mini-batch Stochastic Gradient Descent (mini-batch SGD).
+					- A compromise which is any number greater than 1 and less than N (examples are still chosen randomly).
+					- Determining the number per batch depends on the dataset and the available compute.
+					- A certain amount of noise can be a good thing. It can help a model generalize better in a neural network. 
+		- EPOCHS:
+			- An epoch means that the model has processed every example in the training set once.
+			- Training typically requires many epochs.
+			- You'll need to experiment with how many epochs it takes for the model to converge.
+			- In general, more epochs produces a better model, but also takes more time to train.
+- linear_regression_taxi.ipynb (first programming exercise).
+	- Required Libraries:
+		- keras (open-source library that provides a Python interface for artificial neural networks). 
+		- matplotlib, plotly.express, numpy, pandas 
+		- tensorflow (developed by Google Brain for ML and AI, mainly used for training and inference of neural networks).
+			- Can be used in a wide variety of programming languages. 
+			- Google's TPUs are tailored for TensorFlow. 
+			- Competes with PyTorch by Meta.
+- CORRELATION MATRIX: an important part of machine learning is determining which features correlate with the label. 
+	- 1.0: perfect positive correlation.
+	- -1.0: perfect negative correlation.
+	- 0.0: no correlation.
+- PAIR PLOT: sometimes it is helpful to visualise relationships between features in a dataset; one way to do this is with a pair plot.
+- EXPERIMENT: it's common with machine learning to run multiple experiments to find the best set of hyperparameters to train your model.
+- LOGISTIC REGRESSION: designed to predict the probability of a given outcome.
+	- Logistic regression models use Log Loss as the loss function instead of squared loss.
+	- Applying regularization is critical to prevent overfitting.
+		- Most logistic regression models use either L2 regularization or Early Stopping to decrease model complexity. 
+- SIGMOID FUNCTION: as the input increases, the output approaches 1. Similarly, as the input decreases, the output approaches 0.
+	- Sigmoid means s-shaped.
+- CLASSIFICATION: the task of predicting which of a set of classes (categories) an example belongs to.
+- CONFUSION MATRIX:
+	- There are 4 possible outcomes from a binary classifier:
+		- True Positive (TP)
+		- False Positive (FP)
+		- False Negative (FN)
+		- True Negative (TN)
+- THRESHOLD: should be set based on the business case of the model because some mistakes are more costly than others.
+- ACCURACY: correct classifications (TP + TN) / total classifications (TP + TN + FP + FN).
+	- Can serve as a course-grained measure of model quality, thus is often the default evaluation metric.
+	- However for imbalanced datasets or where one kind of mistake is more costly, it is better to optimize for other metrics.
+- RECALL: also known as True Positive Rate (TPR) or Probability Of Detection
+	- Correctly classified actual positives (TP) / all actual positives (TP + FN).
+	- Use when false negatives are more expensive than false positives.
+- FALSE POSITIVE RATE (FPR): also know as the Probability Of False Alarm.
+	- Incorrectly classified actual negatives (FP) / all actual negatives (FP + TN).
+	- Use when false positives are more expensive than false negatives.
+- PRECISION: correctly classified actual positives (TP) / everything classified as positive (TP + FP).
+	- Use when it's very important for positive predictions to be accurate.
+	- Precision and recall often show an inverse relationship, where improving one worsens the other. 
+	- NaN, or "not a number", appears when dividing by 0, which can happen with any of these metrics.
+- F1 SCORE: the harmonic mean (a kind of average) of precision and recall.
+	- F1 = 2TP / (2TP + FP + FN).
+- RECEIVER-OPERATING CHARACTERISTIC CURVE (ROC):
+	- A visual representation of model performance across all thresholds (graphing TPR over FPR at selected intervals).
+- AREA UNDER THE CURVE (AUC):
+	- The probability that the model, if given a randomly chosen positive or negative example, will rank the positive higher than the negative.
+	- A perfect model (a square with sides of length 1), has an AUC of 1.0.
+	- For a binary classifier, a model that does exactly as well as random guesses has a ROC that is a diagonal line from (0, 0) to (1, 1).
+		- In this case the AUC is 0.5.
+	- AUC is a useful measure for comparing the performance of two different models (as long as the dataset is roughly balanced).
+		- The model with greater area under the curve is generally the better one.
+- PRECISION-RECALL CURVE (PRC):
+	- When the dataset is imbalanced, PRCs and the area underneath may offer better comparative visualizations of model performance. 
+	- Created by plotting precision on the y-axis and recall on the x-axis across all thresholds.
+- PREDICTION BIAS: the difference between the mean of a model's predictions and the mean of ground-truth labels in the data.
+	- Prediction bias can be caused by:
+		- Biases or noise in the data, including biased sampling for the training set.
+		- Too-strong regularization, meaning that the model was oversimplified and lost some necessary complexity.
+		- Bugs in the model training pipeline.
+		- The set of features provided to the model being insufficient for the task.
+- MULTI-CLASS CLASSIFICATION:
+	- If each example can only be assigned to one class, then the classification problem can be handled as a binary classification problem.
+		- One class contains one of the multiple classes, and the other class contains all the other classes put together.
+			- The process can then be repeated for each of the original classes.
+	- If an example can be assigned to multiple classes (non-exclusive), this is known as a multi-label classification problem.
+- binary_classification_rice.ipynb (second programming exercise).
+	- Paper: https://ijisae.org/index.php/IJISAE/article/view/1068
+	- Rice Dataset Cammeo and Osmancik (download): https://www.muratkoklu.com/datasets/
+	- Kaggle page (with descriptions of features): https://www.kaggle.com/datasets/muratkokludataset/rice-dataset-commeo-and-osmancik
+	- NORMALIZE DATA: values of each feature should span roughly the same range.
+		- This can be done by converting each raw value to its Z-score.
+		- Z-SCORE: for a given value is how many standard deviations away from the mean the value is.
+	- The randomized and partitioned train, validation and test split used is 80%, 10% and 10% respectively.
+	- It's important to prevent the model from getting the label as input during training (which is called label leakage).
+		- This can be prevented by storing features and labels as separate variables.
+- FEATURE VECTOR: your ML model interacts with the data in the feature vector, not the data in the dataset.
+- FEATURE ENGINEERING: you must determine the best way to represent raw dataset values as trainable values in the feature vector.
+	- The most common feature engineering techniques are:
+		- NORMALIZATION: converting numerical values into a standard range.
+		- BINNING (also referred to as BUCKETING): converting numerical values into buckets of ranges.
+	- Every value in a feature vector must be a floating-point value.
+	- Before creating feature vectors it is a good idea to:
+		- Visualise your data in plots.
+			- Helps you check assumptions.
+		- Get statistics about your data (can use the pandas DataFrame .describe() method) such as:
+			- Mean (traditional average) and median (50% row of table).
+			- Standard deviation.
+		- Find outlier(s) (a value distant from others which often cause problems in model training):
+			- If outlier(s) can be attributed to a mistake, you generally delete it/them.
+			- If the delta (difference between start and end of range) of percentiles differs greatly.
+				- May indicate presence of outlier(s).
+			- If the standard deviation is as high, or nearly as high as the mean.
+				- May indicate presence of outlier(s).
+			- If all outliers appear on a certain day (or by a certain data gatherer).
+				- May indicate a mistake has been made.  
+			- If not a mistake, decide whether to keep it or possibly apply 'clipping'.
+- NORMALIZATION: to be used on most numerical features, transforming them to be on a similar scale (perhaps 0 to 1).
+	- Helps models converge more quickly during training (although some advanced optimizers protect against slow convergence anyway).
+	- Avoids having the system set a value to NaN when the model exceeds the floating-point precision limit.
+	- Helps the model learn appropriate weights for each feature.
+	- Three popular normalization methods:
+		- LINEAR SCALING (or just scaling):
+			- Good choice if the feature is approximately uniformly distributed (flat-shaped with few or no outliers).
+			- However, most real-world features do not meet the criteria for linear scaling.
+		- Z-SCORE SCALING:
+			- The number of standard deviations a value is from the mean.
+			- Good choice when the data follows (or is somewhat like) a normal distribution (bell-shaped with peak close to mean).
+			- Typically a better choice than linear scaling.			
+		- LOG SCALING:
+			- Computes the logarithm of the raw value (could be any base but is usually the natural logarithm).
+			- This changes the distribution.
+			- Is helpful when the data conforms to a power law distribution (heavy-tail shaped on either or both sides).
+				- Where low values of X have high values of Y and high values of X have low values of Y.
+	- Also CLIPPING (although it is not technically normalization):
+		- To minimise the influence of extreme outliers, but must be used carefully.
+		- Clipping a feature value at 4.0 doesn't mean your model ignores all values greater than 4.0.
+			- Rather, it means that all values that were greater than 4.0 now become 4.0.
+		- You can also clip values after applying other forms of normalization. 
+- BINNING (also called bucketing): groups different numerical subranges.
+	- In many cases, binning turns numerical data into categorical data.
+	- Is sometimes better than normalizing.
+	- Even though X is a single column in dataset, binning cause a model to treat X as multiple separate features.
+		- The model learns separate weights for each bin. 
+	- Good alternative to scaling or clipping when:
+		- The feature values are clustered or the linear relationship between feature and label is weak.
+	- A separate bin for each value though would be a bad idea because:
+		- None of the bins would contain enough examples for the model to train on.
+		- Typically you should minimize the number of features in a model. 
+	- QUANTILE BUCKETING: creates bucketing boundaries such that the number of examples in each bucket is exactly or nearly equal.
+		- An alternative to equally spaced buckets.
+			- Equally spaced buckets work for may data distributions, but gives extra information space to the long tail.
+		- This mostly hides the outliers instead.
+- SCRUBBING: 
+	- A few bad apples can spoil a large dataset.
+		- Examples:
+			- You can write a script to detect:
+				- Omitted values.
+				- Duplicates.
+				- Out-of-range feature values.
+			- Mislabeling.
+				- When generated by multiple people, statistically determine and compare for each.
+	- Document all your data transformations. 
+- CLEAR NAMING: each feature should have sensible and obvious meaning to humans.
+- MAGIC VALUES: for example, watch out for -1 representing the absence of a measurement.
+- POLYNOMIAL TRANSFORMS: when the data points cannot be separated by a straight line, what can be done?
+	- A linear regression problem, with weights determined through gradient descent, can contain a hidden squared term where appropriate.
+- CATEGORICAL DATA: has a specific set of possible values.
+	- True numerical data can be meaningfully multiplied but a postal code of 20004 is not twice as large a signal as a postal code of 10002.
+	- Models can only train on floating-point values, not strings.
+- DIMENSION: a synonym for the number of elements in a feature vector. 
+- VOCABULARY: when a categorical feature has a low number of possible categories, you can encode each value as a separate feature.
+- INDEXED FEATURES: after converting strings to unique index numbers, you'll need to process the data further.
+	- Need to represent the data in ways that help the model learn meaningful relationships between the values.
+- ONE-HOT ENCODING: exactly one of the elements in a one-hot vector has the value 1.0, all the rest have the value 0.0.
+	- In a variant known as 'multi-hot encoding', multiple values can be 1.0.
+	- SPARSE REPRESENTATION: for example, if the 1.0 is in the 2nd position (starting count at zero):
+		- Then the sparse representation for the one-hot vector is 2 (using far less memory).
+			- For a multi-hot encoding, it would include all the non-zero positions.
+- OUTLIERS (in categorical data): you can lump them into a single 'catch-all' category (out-of-vocabulary (OOV)).
+- EMBEDDINGS: for when the number of categories is high and one-hot encoding is usually a bad choice. 
+- HUMAN RATERS: data manually labelled by human beings is often referred to as gold labels.
+	- Human-generated data can be expensive.
+	- INTER-RATER AGREEMENT: the difference between human raters' decisions.
+- MACHINE RATERS: categories which are automatically determined by classification models is often referred to as silver labels.  
+- FEATURE CROSSES: created by taking the Cartesian product of two or more categorical or bucketed features of the dataset. 
+	- Like polynomial transforms, allows linear models to handle non-linearities.
+		- Polynomial transforms typically combine numerical data, while feature crosses combine categorical data.
+	- Also encodes interactions between features.
+	- Domain knowledge can suggest a useful combination of features to cross.
+	- Be careful: crossing two sparse features produces an even sparser new feature.
+- IMPUTATION: in statistics, imputation is the process of replacing missing data with substituted values.
+	- When one or more values are missing, most statistical packages default to discarding those cases.
+		- Discarding may introduce bias or affect the representativeness of the results. 
+	- Imputation preserves all cases by replacing missing data with an estimated value based on other available information.
+	- A good dataset tells the model which values are imputed and which are actual.
+		- One way to do this is to add an extra Boolean column, for example: 'temperature_is_imputed'.
+			- During training, the model will probably learn to trust examples containing imputed values less.
+	- One common algorithm is to use the mean or median as the imputed value.
+		- When you represent a numerical feature with Z-scores, then the imputed value is typically zero. 
+	- A sorted dataset can sometimes simplify imputation.
+		- However, it is a bad idea to train on a sorted dataset. 
+- DATASETS: the quality and size of the dataset matters much more than which shiny algorithm you use to build your model.
+	- Typically, 80% of the time on a machine learning project is spent constructing datasets and transforming data.
+	- Looking at your data by hand is a good exercise regardless of how you obtained your data. 
+- DIRECT LABELS: identical to the prediction your model is trying to make.
+- PROXY LABELS: similar, but not identical, to the prediction your model is trying to make.
+	- Are always a compromise, an imperfect approximation of a direct label.
+	- Some are close enough approximations to be useful.
+	- Models that use proxy labels are only as useful as the connection between the proxy label and the prediction.
+- CLASS-IMBALANCED DATASET: one label is considerably more common than the other.
+	- In the real world, class-imbalanced datasets are far more common than class-balanced datasets.
+		- Fraudulent purchases or patients with a rare virus might make up less than 0.1% of the examples.
+	- MAJORITY CLASS: the more common label.
+	- MINORITY CLASS: the less common label.
+	- Severely class-imbalanced datasets might not contain enough minority examples in each batch for proper training.
+	- During training, a model should learn:
+		1) What feature corresponds to what class.
+		2) What is the relative distribution of the classes.
+		- Standard training conflates these two goals.
+			- DOWNSAMPLING and UPWEIGHTING the majority class separates these two goals.
+				- This enables the model to achieve both goals (somewhat counterintuitively).
+				- Downsampling means training on a disproportionately low percentage of majority class examples.
+					- This introduces a prediction bias.
+						- To correct this, you must 'upweight' the majority classes by the factor you downsampled.
+						- You do this by treating the loss on a majority class example more harshly.
+							- If we downsample by a factor of 25, we treat the loss as if it were 25 errors.
+					- Experiment with this as you would other hyperparameters. 
+- SPLITTING DATASETS:
+	- The more often you use the same test set, the more likely the model will fit the peculiarities of the test set.
+	- VALIDATION SET: performs the initial testing on the model as it is being trained.
+	- The only fair test of a model is against new examples, not duplicates.
+- OVERFITTING: means creating a model that matches (memorizes) the training set so closely that it fails to make correct predictions on new data.
+	 - Causes:
+		- The training set doesn't adequately represent real life data (or the validation set or test set).
+		- The model is too complex.
+- GENERALIZATION: the opposite of overfitting (makes good predictions on new data).
+	- LOSS CURVE: plots a model's loss against the number of training iterations.
+	- GENERALIZATION CURVE: a graph that shows two or more loss curves.
+		- A generalization curve for a well-fit model shows curves that have similar shapes.
+	- GENERALIZATION CONDITIONS:
+		- Examples can't influence each other.
+			- A real world model may struggle due to a feedback loop where the predictions alter behaviour.
+		- The dataset doesn't change significantly over time.
+			- For example: viewer's tastes change in ways that past behaviour can't predict.
+		- The dataset partitions have the same distribution.
+			- Achieved through extensive shuffling. 
+- MODEL COMPLEXITY:
+	- A fourteenth-century friar named William of Occam formalized the preference for simplicity known as Occam's razor.
+	- Complex models typically outperform simple models on the training set.
+	- However, simple models typically outperform complex models on the test set (which is more important).
+	- On a new ML project, it's best for your data collection pipeline to start with only one or two features.
+		- This will help confirm that the ML model works as intended.
+		- When you build a baseline from a couple of features, you'll feel like you're making progress.
+- REGULARIZATION:
+	- ML models must simultaneously meet two conflicting goals:
+		1) Fit data well.
+		2) Fit data as simply as possible.
+	- Penalizing complex models is one form of regularization.
+- Models that focus solely on minimizing loss tend to overfit. 
+	- A better training optimization minimizes some combination of loss and complexity.
+	- Unfortunately, loss and complexity are typically inversely related.
+		- You should find a reasonable middle ground. 
+- L2 REGULARIZATION: encourages weights towards zero.
+- REGULARIZATION RATE (LAMBDA): a data-dependent scalar value used to tune the overall impact of complexity on model training.
+	- A high rate tends to produce a histogram of model weights having a normal distribution.
+	- A low rate tends to produce a histogram of model weights with a flat distribution.
+	- Your goal is to find the equilibrium between learning rate and regularization rate. 
+- EARLY STOPPING: an alternative to complexity-based regularization.
+	- A quick but rarely optimal method.
+	- Involves ending the training before the model fully converges.
+- INTERPRETING LOSS CURVES: loss curves are often challenging to interpret.
+	- In response to an oscillating loss curve, try reducing the learning rate.
+	- If test loss diverges from training loss:
+		- The model is probably overfitting the training set.
+			- Possible solutions:
+				- Make the model simpler, possibly by reducing the number of features.
+				- Increase the regularization rate.
+				- Ensure that the training set and test set are statistically equivalent.
+---------------------------------------------------------------------------------------------------------  

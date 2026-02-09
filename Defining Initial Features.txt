@@ -1,0 +1,47 @@
+Defining the Initial Features (with column names in brackets):
+
+TARGET VARIABLE:
+- Fan Dual spread covered by away team: Boolean 0/1 for no/yes (sprd_cvrd)
+
+FEATURES:
+- Game year this millennium: 1 - 26 (g_yr)
+- Game day of week: 1 - 7 starting Sunday (g_day_wk)
+- Game month of year: 1 - 12 (g_mth_yr)
+- Game day of month: 1 - 31 (g_day_mth)
+- Game tip-off time in 24 hour decimal magnitude eg: 19.5 for 7:30PM (g_time)
+- Fan Dual spread for away team: -22.5 - 22.5 (f_d_sprd_away)
+
+- Home team alphabetical index: 1 - 30 (home_t_idx)
+- Home team conference: Boolean 0/1 for east/west (home_conf)
+- Home team distance travelled from previous game venue: kilometers 0 - 4,400 (home_dist_trav)
+- Home team game number of season, including playoffs: 1 - 110 (home_g_num)
+- Home team win-loss ratio over last 2 games: 0.0 - 1.0 (home_w_l_last_2)
+- Home team win-loss ratio over last 10 games: 0.0 - 1.0 (home_w_l_last_10)
+- Home team win-loss ratio against opponent last 2 games: 0.0 - 1.0 (home_w_l_opp_last_2)
+- Home team win-loss ratio against opponent last 10 games: 0.0 - 1.0 (home_w_l_opp_last_10)
+- Home team average points scored last 2 games: 50.0 - 180.0 (home_pts_last_2)
+- Home team average points scored last 10 games: 50.0 - 180.0 (home_pts_last_10)
+- Home team average points allowed last 2 games: 50.0 - 180.0 (home_allow_last_2)
+- Home team average points allowed last 10 games: 50.0 - 180.0 (home_allow_last_10)
+- Home team average points scored against opponent last 2 games: 50.0 - 180.0 (home_pts_opp_last_2)
+- Home team average points scored against opponent last 10 games: 50.0 - 180.0 (home_pts_opp_last_10)
+- Home team average points allowed against opponent last 2 games: 50.0 - 180.0 (home_allow_opp_last_2)
+- Home team average points allowed against opponent last 10 games: 50.0 - 180.0 (home_allow_opp_last_10)
+
+- Away team alphabetical index: 1 - 30 (away_t_idx)
+- Away team conference: Boolean 0/1 for east/west (away_conf)
+- Away team distance travelled from previous game venue: kilometers 0 - 4,400 (away_dist_trav)
+- Away team game number of season, including playoffs: 1 - 110 (away_g_num)
+- Away team win-loss ratio over last 2 games: 0.0 - 1.0 (away_w_l_last_2)
+- Away team win-loss ratio over last 10 games: 0.0 - 1.0 (away_w_l_last_10)
+- Away team win-loss ratio against opponent last 2 games: 0.0 - 1.0 (away_w_l_opp_last_2)
+- Away team win-loss ratio against opponent last 10 games: 0.0 - 1.0 (away_w_l_opp_last_10)
+- Away team average points scored last 2 games: 50.0 - 180.0 (away_pts_last_2)
+- Away team average points scored last 10 games: 50.0 - 180.0 (away_pts_last_10)
+- Away team average points allowed last 2 games: 50.0 - 180.0 (away_allow_last_2)
+- Away team average points allowed last 10 games: 50.0 - 180.0 (away_allow_last_10)
+- Away team average points scored against opponent last 2 games: 50.0 - 180.0 (away_pts_opp_last_2)
+- Away team average points scored against opponent last 10 games: 50.0 - 180.0 (away_pts_opp_last_10)
+- Away team average points allowed against opponent last 2 games: 50.0 - 180.0 (away_allow_opp_last_2)
+- Away team average points allowed against opponent last 10 games: 50.0 - 180.0 (away_allow_opp_last_10)
+ 
