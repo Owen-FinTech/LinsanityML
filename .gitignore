@@ -11,6 +11,16 @@ data/spreads_raw.json
 data/spreads.csv
 data/features.csv
 data/features_with_spreads.csv
+data/player_game_logs.csv
+data/weather_cache.csv
+data/game_details.csv
+data/rosters.csv
+data/rosters_enriched.csv
+data/player_countries.csv
+data/injury_features.csv
+data/coach_features.csv
+data/coaches.csv
+data/conf_features.csv
 
 # Keep the data directory structure
 !data/.gitkeep
@@ -26,3 +36,5 @@ Thumbs.db
 # Environment
 .env
 *.env
+models/
+output/

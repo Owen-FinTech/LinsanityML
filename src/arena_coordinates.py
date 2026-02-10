@@ -116,6 +116,16 @@ TEAM_ALPHA_INDEX = {
     "SAC": 26, "SAS": 27, "TOR": 28, "UTA": 29, "WAS": 30,
 }
 
+# Arena altitude in metres (above sea level)
+ARENA_ALTITUDE_M = {
+    "ATL": 320, "BOS": 6, "BKN": 10, "CHA": 229, "CHI": 181,
+    "CLE": 199, "DAL": 131, "DEN": 1609, "DET": 183, "GSW": 3,
+    "HOU": 15, "IND": 218, "LAC": 30, "LAL": 87, "MEM": 103,
+    "MIA": 2, "MIL": 188, "MIN": 253, "NOP": 1, "NYK": 10,
+    "OKC": 366, "ORL": 25, "PHI": 5, "PHX": 331, "POR": 15,
+    "SAC": 9, "SAS": 198, "TOR": 76, "UTA": 1288, "WAS": 22,
+}
+
 # Conference mapping (0 = East, 1 = West)
 TEAM_CONFERENCE = {
     "ATL": 0, "BOS": 0, "BKN": 0, "CHA": 0, "CHI": 0,

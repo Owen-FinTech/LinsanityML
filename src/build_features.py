@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 from arena_coordinates import (
     ARENA_COORDS,
+    ARENA_ALTITUDE_M,
     TEAM_ID_TO_ABBREV,
     TEAM_ALPHA_INDEX,
     TEAM_CONFERENCE,
@@ -154,6 +155,59 @@ def build_team_histories(games_df):
             distances.append(dist)
 
         tg["dist_trav"] = distances
+
+        # Rest days (days since previous game)
+        game_dates = tg["GAME_DATE"].values
+        rest = [np.nan]
+        for i in range(1, len(tg)):
+            delta = (game_dates[i] - game_dates[i - 1]) / np.timedelta64(1, "D")
+            rest.append(delta)
+        tg["rest_days"] = rest
+
+        # Win/loss streak: positive = win streak, negative = loss streak
+        wl_binary = (tg["WL"] == "W").astype(int).values
+        streaks = [0.0]
+        for i in range(1, len(tg)):
+            # Streak BEFORE this game (shift by 1)
+            prev = wl_binary[i - 1]
+            if i == 1:
+                streaks.append(1.0 if prev == 1 else -1.0)
+            else:
+                prev_streak = streaks[-1]
+                if prev == 1:
+                    streaks.append(max(prev_streak, 0) + 1)
+                else:
+                    streaks.append(min(prev_streak, 0) - 1)
+        # Shift: streak entering the game (not including its result)
+        tg["streak"] = [np.nan] + streaks[1:]
+
+        # Home/away win rate (last 10 home or away games respectively)
+        home_mask = tg["IS_HOME"].values
+        home_wins = []
+        away_wins = []
+        home_count = 0
+        away_count = 0
+        home_w = 0
+        away_w = 0
+        # Use simple expanding lists for last-10 home/away
+        h_results = []
+        a_results = []
+        for i in range(len(tg)):
+            # Record rate BEFORE this game
+            if home_mask[i]:
+                home_wins.append(len(h_results) and sum(h_results[-10:]) / len(h_results[-10:]) or np.nan)
+                away_wins.append(len(a_results) and sum(a_results[-10:]) / len(a_results[-10:]) or np.nan)
+                h_results.append(1 if wl_binary[i] else 0)
+            else:
+                home_wins.append(len(h_results) and sum(h_results[-10:]) / len(h_results[-10:]) or np.nan)
+                away_wins.append(len(a_results) and sum(a_results[-10:]) / len(a_results[-10:]) or np.nan)
+                a_results.append(1 if wl_binary[i] else 0)
+        tg["home_wl_last_10"] = home_wins
+        tg["away_wl_last_10"] = away_wins
+
+        # Pace proxy: total points (own + opponent) rolling last 10
+        tg["pace_last_10"] = (tg["PTS"] + tg["PTS_OPP"]).rolling(10, min_periods=1).mean().shift(1)
+
         all_team_stats.append(tg)
 
     return pd.concat(all_team_stats, ignore_index=True)
@@ -225,6 +279,14 @@ def build_feature_matrix(games_df, team_histories):
             "home_allow_opp_last_2": home_stats.get("allow_opp_last_2", np.nan),
             "home_allow_opp_last_10": home_stats.get("allow_opp_last_10", np.nan),
 
+            # New: rest days, streaks, home/away splits, pace, altitude
+            "home_rest_days": home_stats.get("rest_days", np.nan),
+            "home_streak": home_stats.get("streak", np.nan),
+            "home_home_wl_10": home_stats.get("home_wl_last_10", np.nan),
+            "home_away_wl_10": home_stats.get("away_wl_last_10", np.nan),
+            "home_pace_10": home_stats.get("pace_last_10", np.nan),
+            "home_altitude_m": ARENA_ALTITUDE_M.get(home_abbrev, np.nan),
+
             # Away team features
             "away_t_idx": TEAM_ALPHA_INDEX.get(away_abbrev, 0),
             "away_conf": TEAM_CONFERENCE.get(away_abbrev, 0),
@@ -242,6 +304,19 @@ def build_feature_matrix(games_df, team_histories):
             "away_pts_opp_last_10": away_stats.get("pts_opp_last_10", np.nan),
             "away_allow_opp_last_2": away_stats.get("allow_opp_last_2", np.nan),
             "away_allow_opp_last_10": away_stats.get("allow_opp_last_10", np.nan),
+
+            # New: away rest days, streaks, splits, pace
+            "away_rest_days": away_stats.get("rest_days", np.nan),
+            "away_streak": away_stats.get("streak", np.nan),
+            "away_home_wl_10": away_stats.get("home_wl_last_10", np.nan),
+            "away_away_wl_10": away_stats.get("away_wl_last_10", np.nan),
+            "away_pace_10": away_stats.get("pace_last_10", np.nan),
+
+            # Pace differential (home - away): positive = home plays faster
+            "pace_diff": (home_stats.get("pace_last_10", np.nan) or np.nan) - (away_stats.get("pace_last_10", np.nan) or np.nan) if pd.notna(home_stats.get("pace_last_10")) and pd.notna(away_stats.get("pace_last_10")) else np.nan,
+
+            # Rest advantage (positive = home more rested)
+            "rest_advantage": (home_stats.get("rest_days", np.nan) or np.nan) - (away_stats.get("rest_days", np.nan) or np.nan) if pd.notna(home_stats.get("rest_days")) and pd.notna(away_stats.get("rest_days")) else np.nan,
         }
 
         features.append(feat)
@@ -264,6 +339,42 @@ def main():
     print("\nBuilding feature matrix...")
     features = build_feature_matrix(games, team_histories)
     print(f"  {len(features)} games with features")
+
+    # Merge weather data if available
+    weather_path = os.path.join(data_dir, "weather_cache.csv")
+    if os.path.exists(weather_path):
+        print("\nMerging weather data...")
+        weather = pd.read_csv(weather_path)
+        weather = weather.rename(columns={"team": "home_team", "date": "game_date", "temp_c": "home_temp_c"})
+        weather["game_date"] = pd.to_datetime(weather["game_date"])
+        features["game_date"] = pd.to_datetime(features["game_date"])
+        before = len(features)
+        features = features.merge(weather, on=["home_team", "game_date"], how="left")
+        print(f"  Matched {features['home_temp_c'].notna().sum()}/{before} games with temperature")
+    else:
+        features["home_temp_c"] = np.nan
+        print("\nNo weather data found — run fetch_weather.py first to add temperatures")
+
+    # Merge injury/absence features if available
+    injury_path = os.path.join(data_dir, "injury_features.csv")
+    if os.path.exists(injury_path):
+        print("\nMerging injury/rust features...")
+        injury = pd.read_csv(injury_path)
+        features = features.merge(injury, on="game_id", how="left")
+        print(f"  Matched {features['home_absent_impact'].notna().sum()}/{len(features)} games")
+    else:
+        print("\nNo injury data found — run build_injury_features.py first")
+
+    # Merge coach features if available
+    coach_path = os.path.join(data_dir, "coach_features.csv")
+    if os.path.exists(coach_path):
+        print("\nMerging coach vs opponent features...")
+        coach = pd.read_csv(coach_path)
+        coach = coach.rename(columns={"GAME_ID": "game_id"})
+        features = features.merge(coach, on="game_id", how="left")
+        print(f"  Matched {features['home_coach_vs_opp_wl'].notna().sum()}/{len(features)} games with coach data")
+    else:
+        print("\nNo coach data found — run fetch_coaches.py first")
 
     # Save
     features_path = os.path.join(data_dir, "features.csv")
