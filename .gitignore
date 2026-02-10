@@ -39,3 +39,6 @@ Thumbs.db
 models/
 output/
 data/predictions/
+data/nodunks/
+data/leaderboard.json
+data/tweet_log.csv
