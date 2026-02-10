@@ -33,7 +33,7 @@ from arena_coordinates import (
     TEAM_NAME_TO_ABBREV, TEAM_ALPHA_INDEX, TEAM_CONFERENCE,
 )
 
-ODDS_API_KEY = os.environ.get("ODDS_API_KEY", "8c91cb5467c62d1660d8e7708fda103b")
+ODDS_API_KEY = os.environ.get("ODDS_API_KEY", "")
 MODEL_DIR = os.path.join(os.path.dirname(__file__), "..", "models")
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 PRED_DIR = os.path.join(DATA_DIR, "predictions")
