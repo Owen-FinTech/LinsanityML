@@ -346,15 +346,15 @@ def confidence_label(prob):
     """Convert probability to human-readable confidence."""
     diff = abs(prob - 0.5)
     if diff < 0.05:
-        return "TOSS-UP"
+        return "Coin Flip"
     elif diff < 0.10:
-        return "LEAN"
+        return "Slight Edge"
     elif diff < 0.15:
-        return "MODERATE"
+        return "Moderate Edge"
     elif diff < 0.20:
-        return "CONFIDENT"
+        return "Confident"
     else:
-        return "STRONG"
+        return "Lock"
 
 
 def main():
